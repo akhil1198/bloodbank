@@ -1,0 +1,7 @@
+Blood Bank Management Application
+
+This system helps track the number of blood units left in the bank.
+
+To start project,
+1. Download Project.
+2. In the Root directory, run `npm install` to install the dependencies and `npm start` to start the project.
