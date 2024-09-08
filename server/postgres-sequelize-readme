@@ -1,0 +1,5 @@
+Steps to create connections and tables on postgres db with sequelize
+1. connect to db
+2. create models
+3. model.sync to create the table on the db
+4. 
