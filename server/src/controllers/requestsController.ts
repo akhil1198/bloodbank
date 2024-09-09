@@ -5,8 +5,22 @@ import Requests from '../models/requests'
 export const getAllRequests = async (req: Request, res: Response): Promise<void> => {
 
     try {
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const startInd = (page - 1) * limit
+        const endInd = page * limit
+        
         const requests = await Requests.findAll();
-        res.json(requests)
+        const paginatedRequests = requests.slice(startInd, endInd)
+        console.log("data: ", paginatedRequests)
+        res.json({
+            paginatedRequests, 
+            page, 
+            limit, 
+            totalPages: Math.ceil(paginatedRequests.length / limit), 
+            totalItems: paginatedRequests.length
+        })
     } catch(err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Requests.")

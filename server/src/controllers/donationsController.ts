@@ -5,8 +5,22 @@ import Donations from '../models/donations'
 export const getAllDonations = async (req: Request, res: Response): Promise<void> => {
 
     try {
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const startInd = (page - 1) * limit
+        const endInd = page * limit
+        
         const donations = await Donations.findAll();
-        res.json(donations)
+        const paginatedDonations = donations.slice(startInd, endInd)
+        console.log("data: ", paginatedDonations)
+        res.json({
+            paginatedDonations, 
+            page, 
+            limit, 
+            totalPages: Math.ceil(paginatedDonations.length / limit), 
+            totalItems: paginatedDonations.length
+        })
     } catch(err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Donations.")

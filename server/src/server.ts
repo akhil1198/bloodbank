@@ -1,5 +1,6 @@
 import express, {Request, Response} from 'express'
 import { Sequelize } from 'sequelize'
+import cors from 'cors'
 import User from './models/user';
 import Donations from './models/donations';
 import userRoutes from './routes/userRoutes'
@@ -9,6 +10,8 @@ import donationRoutes from './routes/donationRoutes'
 
 const app = express()
 const port = 5000
+
+app.use(cors())
 
 // Configure Sequelize connection
 const sequelize = new Sequelize('bloodbank', 'postgres', 'Akhil@1198', {

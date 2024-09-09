@@ -17,8 +17,20 @@ const user_1 = __importDefault(require("../models/user"));
 // Get all users from the db
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startInd = (page - 1) * limit;
+        const endInd = page * limit;
         const user = yield user_1.default.findAll();
-        res.json(user);
+        const paginatedUser = user.slice(startInd, endInd);
+        console.log("data: ", paginatedUser);
+        res.json({
+            paginatedUser,
+            page,
+            limit,
+            totalPages: Math.ceil(paginatedUser.length / limit),
+            totalItems: paginatedUser.length
+        });
     }
     catch (err) {
         console.log("Error: ", err);

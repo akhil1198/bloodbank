@@ -5,8 +5,22 @@ import Units from '../models/units'
 export const getAllUnits = async (req: Request, res: Response): Promise<void> => {
 
     try {
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const startInd = (page - 1) * limit
+        const endInd = page * limit
+        
         const units = await Units.findAll();
-        res.json(units)
+        const paginatedUnits = units.slice(startInd, endInd)
+        console.log("data: ", paginatedUnits)
+        res.json({
+            paginatedUnits, 
+            page, 
+            limit, 
+            totalPages: Math.ceil(paginatedUnits.length / limit), 
+            totalItems: paginatedUnits.length
+        })
     } catch(err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Units.")

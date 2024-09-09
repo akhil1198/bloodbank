@@ -5,8 +5,23 @@ import Users from '../models/user'
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 
     try {
+        
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const startInd = (page - 1) * limit
+        const endInd = page * limit
+        
         const user = await Users.findAll();
-        res.json(user)
+        const paginatedUser = user.slice(startInd, endInd)
+        console.log("data: ", paginatedUser)
+        res.json({
+            paginatedUser, 
+            page, 
+            limit, 
+            totalPages: Math.ceil(paginatedUser.length / limit), 
+            totalItems: paginatedUser.length
+        })
     } catch(err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Users.")
