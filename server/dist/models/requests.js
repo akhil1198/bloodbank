@@ -27,16 +27,9 @@ Requests.init({
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
     },
-    phone: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-    },
     requestedBloodGroup: {
         type: sequelize_1.DataTypes.CHAR,
         allowNull: false,
-    },
-    age: {
-        type: sequelize_1.DataTypes.INTEGER,
     },
     count: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -49,3 +42,4 @@ Requests.init({
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 });
+exports.default = Requests;

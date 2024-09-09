@@ -28,7 +28,7 @@ Donations.init({
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
     },
-    bloodGroup: {
+    donatedBloodGroup: {
         type: sequelize_1.DataTypes.CHAR,
         allowNull: false,
     },

@@ -15,9 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const sequelize_1 = require("sequelize");
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
-const unitRoutes_1 = __importDefault(require("./routes/unitRoutes"));
-const requestRoutes_1 = __importDefault(require("./routes/requestRoutes"));
-const donationRoutes_1 = __importDefault(require("./routes/donationRoutes"));
 const app = (0, express_1.default)();
 const port = 5000;
 // Configure Sequelize connection
@@ -37,9 +34,6 @@ sequelize
     console.error('Unable to connect to the database:', err);
 });
 app.use('/api', userRoutes_1.default);
-app.use('/api', unitRoutes_1.default);
-app.use('/api', donationRoutes_1.default);
-app.use('/api', requestRoutes_1.default);
 app.get('/', (req, res) => {
     res.send('Hello world!');
 });

@@ -34,7 +34,7 @@ Donations.init({
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     },
-    bloodGroup: {
+    donatedBloodGroup: {
       type: DataTypes.CHAR,
       allowNull: false,
     },

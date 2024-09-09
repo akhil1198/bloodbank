@@ -12,6 +12,9 @@
 /client/build
 client/.env
 server/.env
+/config
+/migrations
+/seeders
 
 # misc
 .DS_Store

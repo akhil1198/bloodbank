@@ -5,21 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_1 = __importDefault(require("../config/db"));
-class Users extends sequelize_1.Model {
+class Units extends sequelize_1.Model {
 }
-Users.init({
+Units.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
+        primaryKey: true
     },
-    name: {
-        type: sequelize_1.DataTypes.STRING,
+    group: {
+        type: sequelize_1.DataTypes.CHAR,
         allowNull: false,
     },
-    email: {
-        type: sequelize_1.DataTypes.STRING,
+    count: {
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
     },
     phone: {
@@ -35,9 +34,9 @@ Users.init({
     }
 }, {
     sequelize: db_1.default,
-    modelName: 'Users',
+    modelName: 'Units',
     timestamps: true,
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 });
-exports.default = Users;
+exports.default = Units;

@@ -31,16 +31,9 @@ Requests.init({
 		onUpdate: 'CASCADE',
 		onDelete: 'CASCADE'
 	},
-	phone: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
 	requestedBloodGroup: {
 		type: DataTypes.CHAR,
 		allowNull: false,
-	},
-	age: {
-		type: DataTypes.INTEGER,
 	},
 	count: {
 		type: DataTypes.INTEGER,
@@ -53,3 +46,5 @@ Requests.init({
 		updatedAt: 'updatedAt'
 	}
 );
+
+export default Requests;
