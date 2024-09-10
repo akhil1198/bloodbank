@@ -10,7 +10,8 @@ module.exports = {
       colors: {
         primary: '#E3EAE1', // Your primary color
         secondary: '#F05353', // Your secondary color
-        tertiary: '#CCA895'
+        tertiary: '#CCA895',
+        back: '#FAFAFA'
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'], // Custom font family
