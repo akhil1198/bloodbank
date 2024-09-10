@@ -17,8 +17,20 @@ const units_1 = __importDefault(require("../models/units"));
 // Get all Units from the db
 const getAllUnits = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startInd = (page - 1) * limit;
+        const endInd = page * limit;
         const units = yield units_1.default.findAll();
-        res.json(units);
+        const totalUnits = units.length;
+        const paginatedUnits = units.slice(startInd, endInd);
+        res.json({
+            paginatedUnits,
+            page,
+            limit,
+            totalPages: Math.ceil(totalUnits / limit),
+            totalUnits
+        });
     }
     catch (err) {
         console.log("Error: ", err);

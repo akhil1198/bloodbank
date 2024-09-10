@@ -8,8 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#3490dc', // Your primary color
-        secondary: '#ffed4a', // Your secondary color
+        primary: '#E3EAE1', // Your primary color
+        secondary: '#F05353', // Your secondary color
+        tertiary: '#CCA895'
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'], // Custom font family

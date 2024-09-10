@@ -17,8 +17,20 @@ const donations_1 = __importDefault(require("../models/donations"));
 // Get all Donations from the db
 const getAllDonations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startInd = (page - 1) * limit;
+        const endInd = page * limit;
         const donations = yield donations_1.default.findAll();
-        res.json(donations);
+        const totalDonations = donations.length;
+        const paginatedDonations = donations.slice(startInd, endInd);
+        res.json({
+            paginatedDonations,
+            page,
+            limit,
+            totalPages: Math.ceil(totalDonations / limit),
+            totalDonations
+        });
     }
     catch (err) {
         console.log("Error: ", err);

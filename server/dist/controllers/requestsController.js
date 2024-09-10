@@ -17,8 +17,20 @@ const requests_1 = __importDefault(require("../models/requests"));
 // Get all Requests from the db
 const getAllRequests = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const requests = yield requests_1.default.findAll();
-        res.json(requests);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startInd = (page - 1) * limit;
+        const endInd = page * limit;
+        const requests = yield requests_1.default.findAll(); // Fetch all the requests
+        const totalItems = requests.length; // Get total number of requests
+        const paginatedRequests = requests.slice(startInd, endInd); // Slice the data based on page and limit
+        res.json({
+            paginatedRequests,
+            page,
+            limit,
+            totalPages: Math.ceil(totalItems / limit), // Calculate total pages based on total items
+            totalItems // Return the total number of requests
+        });
     }
     catch (err) {
         console.log("Error: ", err);

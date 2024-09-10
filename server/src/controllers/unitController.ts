@@ -10,18 +10,19 @@ export const getAllUnits = async (req: Request, res: Response): Promise<void> =>
 
         const startInd = (page - 1) * limit
         const endInd = page * limit
-        
+
         const units = await Units.findAll();
+        const totalUnits = units.length
         const paginatedUnits = units.slice(startInd, endInd)
-        console.log("data: ", paginatedUnits)
+
         res.json({
-            paginatedUnits, 
-            page, 
-            limit, 
-            totalPages: Math.ceil(paginatedUnits.length / limit), 
-            totalItems: paginatedUnits.length
+            paginatedUnits,
+            page,
+            limit,
+            totalPages: Math.ceil(totalUnits / limit),
+            totalUnits
         })
-    } catch(err) {
+    } catch (err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Units.")
     }
@@ -33,12 +34,12 @@ export const getUnitsByID = async (req: Request, res: Response): Promise<void> =
 
     try {
         const units = await Units.findByPk(req.body.id);
-        if (units){
+        if (units) {
             res.json(units)
         } else {
             res.status(400).send("Unit does not exist.")
         }
-    } catch(err) {
+    } catch (err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Unit.")
     }

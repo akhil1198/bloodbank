@@ -10,18 +10,19 @@ export const getAllDonations = async (req: Request, res: Response): Promise<void
 
         const startInd = (page - 1) * limit
         const endInd = page * limit
-        
+
         const donations = await Donations.findAll();
+        const totalDonations = donations.length
         const paginatedDonations = donations.slice(startInd, endInd)
-        console.log("data: ", paginatedDonations)
+
         res.json({
-            paginatedDonations, 
-            page, 
-            limit, 
-            totalPages: Math.ceil(paginatedDonations.length / limit), 
-            totalItems: paginatedDonations.length
+            paginatedDonations,
+            page,
+            limit,
+            totalPages: Math.ceil(totalDonations / limit),
+            totalDonations
         })
-    } catch(err) {
+    } catch (err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Donations.")
     }
@@ -33,12 +34,12 @@ export const getDonationsByID = async (req: Request, res: Response): Promise<voi
 
     try {
         const donations = await Donations.findByPk(req.body.id);
-        if (donations){
+        if (donations) {
             res.json(donations)
         } else {
             res.status(400).send("Unit does not exist.")
         }
-    } catch(err) {
+    } catch (err) {
         console.log("Error: ", err)
         res.status(500).send("Error Retrieving Unit.")
     }

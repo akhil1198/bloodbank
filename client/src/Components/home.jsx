@@ -27,17 +27,123 @@ const Home = () => {
 	// };
 
 	// Handle page change
-	const handleUnitsPageChange = (page) => {
-		setCurrentUnitsPage(page);
+	const handleUnitsPageChange = (newPage) => {
+		if (newPage > 0 && newPage <= totalUnitPages) {
+			setCurrentUnitsPage(page);
+		}
 	};
 
-	const handleRequestsPageChange = (page) => {
-		setCurrentRequestsPage(page);
+	const fetchUnits = async (page, limit) => {
+		try {
+			const response = await axios.get('http://localhost:5000/api/units', {
+				params: {
+					page,
+					limit
+				}
+			})
+			return response.data
+		} catch (error) {
+			console.error('Error fetching data', error);
+			throw error;
+		}
+	}
+
+	useEffect(() => {
+		const loadItems = async () => {
+			setLoading(true)
+			try {
+				const unitsData = await fetchUnits(currentUnitsPage, 10)
+				setUnits(unitsData.paginatedUnits);
+				setTotalUnitPages(unitsData.totalPages)
+			} catch (error) {
+				console.log('Error fetching data', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		loadItems()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentUnitsPage])
+
+	const handleRequestsPageChange = (newPage) => {
+		if (newPage > 0 && newPage <= totalRequestPages) {
+			setCurrentRequestsPage(newPage);
+		}
 	};
 
-	const handleDonationsPageChange = (page) => {
-		setCurrentDonationsPage(page);
+	// Function to fetch paginated data from backend
+	const fetchRequests = async (page, limit) => {
+		try {
+			// Send current page and limit as query params
+			const response = await axios.get('http://localhost:5000/api/requests', {
+				params: {
+					page, // Use 'page' to send the correct current page
+					limit
+				}
+			});
+			return response.data; // Return the data object
+		} catch (error) {
+			console.error('Error fetching data', error);
+			throw error;
+		}
 	};
+
+	// Fetch data when currentRequestsPage changes
+	useEffect(() => {
+		const loadItems = async () => {
+			setLoading(true);
+			try {
+				// Fetch data for the current page
+				const requestsData = await fetchRequests(currentRequestsPage, 10);
+				console.log('Requests data:', requestsData);
+				setRequests(requestsData.paginatedRequests);
+				setTotalRequestPages(requestsData.totalPages);
+			} catch (error) {
+				console.log('Error fetching data', error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadItems();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentRequestsPage]);
+
+	const handleDonationsPageChange = (newPage) => {
+		if (newPage > 0 && newPage <= totalDonationPages) {
+			setCurrentDonationsPage(newPage);
+		}
+	};
+
+	const fetchDonations = async (page, limit) => {
+		const response = await axios.get('http://localhost:5000/api/donations', {
+			params: {
+				page,
+				limit
+			}
+		})
+		return response.data
+	}
+
+	useEffect(() => {
+		const loadItems = async () => {
+			setLoading(true)
+			try {
+				let donationsdata = await fetchDonations(currentDonationsPage, 10)
+				console.log(donationsdata)
+				setDonations(donationsdata.paginatedDonations);
+				setTotalDonationPages(donationsdata.totalPages)
+			} catch (error) {
+				console.log('Error fetching data', error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		loadItems()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentDonationsPage])
 
 	const handleTabSwitch = (tab) => {
 		setActiveTab(tab)
@@ -52,98 +158,47 @@ const Home = () => {
 	// 	})
 	// 	return response
 	// }
-	const fetchRequests = async (page, limit) => {
-		const response = await axios.get('http://localhost:5000/api/requests', {
-			params: {
-				currentRequestsPage,
-				limit
-			}
-		})
-		return response
-	}
-	const fetchDonations = async (page, limit) => {
-		const response = await axios.get('http://localhost:5000/api/donations', {
-			params: {
-				currentDonationsPage,
-				limit
-			}
-		})
-		return response
-	}
-	const fetchUnits = async (page, limit) => {
-		const response = await axios.get('http://localhost:5000/api/units', {
-			params: {
-				currentUnitsPage,
-				limit
-			}
-		})
-		return response
-	}
+	// const fetchRequests = async (page, limit) => {
+	// 	const response = await axios.get('http://localhost:5000/api/requests', {
+	// 		params: {
+	// 			currentRequestsPage,
+	// 			limit
+	// 		}
+	// 	})
+	// 	return response
+	// }
 
-	useEffect(() => {
-		const loadItems = async () => {
-			setLoading(true)
-			try {
-				let donationsdata = await fetchDonations(currentDonationsPage, 10)
-				setDonations(donationsdata.data.paginatedDonations);
-				setTotalDonationPages(donationsdata.data.totalPages)
-			} catch (error) {
-				console.log('Error fetching data', error)
-			} finally {
-				setLoading(false)
-			}
-		}
 
-		loadItems()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentDonationsPage])
+	// useEffect(() => {
+	// 	const loadItems = async () => {
+	// 		setLoading(true)
+	// 		try {
+	// 			let requestsdata = await fetchRequests(currentRequestsPage, 10)
+	// 			console.log(requestsdata)
+	// 			setRequests(requestsdata.data.paginatedRequests);
+	// 			setTotalRequestPages(requestsdata.data.totalPages)
+	// 		} catch (error) {
+	// 			console.log('Error fetching data', error)
+	// 		} finally {
+	// 			setLoading(false)
+	// 		}
+	// 	}
 
-	useEffect(() => {
-		const loadItems = async () => {
-			setLoading(true)
-			try {
-				let requestsdata = await fetchRequests(currentRequestsPage, 10)
-				setRequests(requestsdata.data.paginatedRequests);
-				setTotalRequestPages(requestsdata.data.totalPages)
-			} catch (error) {
-				console.log('Error fetching data', error)
-			} finally {
-				setLoading(false)
-			}
-		}
+	// 	loadItems()
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [currentRequestsPage])
 
-		loadItems()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentRequestsPage])
-
-	useEffect(() => {
-		const loadItems = async () => {
-			setLoading(true)
-			try {
-				let unitsdata = await fetchUnits(currentUnitsPage, 10)
-				setUnits(unitsdata.data.paginatedUnits);
-				setTotalUnitPages(unitsdata.data.totalPages)
-			} catch (error) {
-				console.log('Error fetching data', error)
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		loadItems()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentUnitsPage])
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-100">
-			<div className="bg-white rounded-lg shadow-lg p-8 h-[80vh] min-w-[150vh] flex flex-col justify-between max-w-sm">
+		<div className="min-h-screen flex items-center justify-center bg-secondary">
+			<div className="bg-primary rounded-lg shadow-lg p-8 h-[80vh] min-w-[150vh] flex flex-col justify-between max-w-sm">
 				<div className='flex items-center justify-between'>
 					<h1 className="text-4xl justify-start font-semibold">Blood Bank Inventory</h1>
 					<div className='justify-end space-x-4 items-center'>
-						<button className=" bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+						<button className=" bg-tertiary text-white py-2 px-4 rounded hover:bg-secondary hover:text-white">
 							Login
 						</button>
-						<button className=" bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+						<button className=" bg-tertiary text-white py-2 px-4 rounded hover:bg-secondary hover:text-white">
 							Sign Up
 						</button>
 					</div>
@@ -154,7 +209,7 @@ const Home = () => {
 					<ul className="flex mt-4">
 						<li className="mr-1">
 							<button
-								className={`rounded-md inline-block py-2 px-4 font-semibold ${activeTab === 'units' ? 'text-white bg-blue-500' : 'text-blue-500 hover:text-blue-700'
+								className={` rounded-md inline-block py-2 px-4 font-semibold ${activeTab === 'units' ? 'text-white bg-secondary' : 'bg-tertiary text-white hover:bg-secondary hover:text-white'
 									}`}
 								onClick={() => handleTabSwitch('units')}
 							>
@@ -163,7 +218,7 @@ const Home = () => {
 						</li>
 						<li className="mr-1">
 							<button
-								className={`rounded-md inline-block py-2 px-4 font-semibold ${activeTab === 'requests' ? 'text-white bg-blue-500' : 'text-blue-500 hover:text-blue-700'
+								className={`rounded-md inline-block py-2 px-4 font-semibold ${activeTab === 'requests' ? 'text-white bg-secondary' : 'bg-tertiary text-white hover:bg-secondary hover:text-white'
 									}`}
 								onClick={() => handleTabSwitch('requests')}
 							>
@@ -172,7 +227,7 @@ const Home = () => {
 						</li>
 						<li className="mr-1">
 							<button
-								className={`rounded-md inline-block py-2 px-4 font-semibold ${activeTab === 'donations' ? 'text-white bg-blue-500' : 'text-blue-500 hover:text-blue-700'
+								className={`rounded-md inline-block py-2 px-4 font-semibold ${activeTab === 'donations' ? 'text-white bg-secondary' : 'bg-tertiary text-white hover:bg-secondary hover:text-white'
 									}`}
 								onClick={() => handleTabSwitch('donations')}
 							>
@@ -229,13 +284,18 @@ const Home = () => {
 											</tr>
 										</thead>
 										<tbody className="text-gray-600 text-sm">
-											<tr className="border-b border-gray-200 hover:bg-gray-100">
-												<td className="py-3 px-6 text-left">REQ-001</td>
-												<td className="py-3 px-6 text-left">akhil</td>
-												<td className="py-3 px-6 text-left">A+</td>
-												<td className="py-3 px-6 text-left">10</td>
-												<td className="py-3 px-6 text-left">2024-09-09</td>
-											</tr>
+											{requests.map(item => {
+												// { console.log("item", item) }
+												return (
+													<tr key={item.id} className="border-b border-gray-200 hover:bg-gray-100">
+														<td className="py-3 px-6 text-left">{item.id}</td>
+														<td className="py-3 px-6 text-left">{item.name}</td>
+														<td className="py-3 px-6 text-left">{item.requestedBloodGroup}</td>
+														<td className="py-3 px-6 text-left">{item.count}</td>
+														<td className="py-3 px-6 text-left">{item.createdAt}</td>
+													</tr>
+												)
+											})}
 										</tbody>
 									</table>
 								</div>
@@ -243,7 +303,7 @@ const Home = () => {
 									<button
 										onClick={() => handleRequestsPageChange(currentRequestsPage - 1)}
 										disabled={currentRequestsPage === 1}
-										className="px-4 py-2 bg-blue-500 text-white rounded-l"
+										className="px-4 py-2 bg-secondary text-white rounded-l"
 									>
 										Previous
 									</button>
@@ -251,7 +311,7 @@ const Home = () => {
 										<button
 											key={page + 1}
 											onClick={() => handleRequestsPageChange(page + 1)}
-											className={`px-4 py-2 ${currentRequestsPage === page + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
+											className={`px-4 py-2 ${currentRequestsPage === page + 1 ? 'bg-secondary text-white' : 'bg-white text-secondary'
 												}`}
 										>
 											{page + 1}
@@ -260,7 +320,7 @@ const Home = () => {
 									<button
 										onClick={() => handleRequestsPageChange(currentRequestsPage + 1)}
 										disabled={currentRequestsPage === totalRequestPages}
-										className="px-4 py-2 bg-blue-500 text-white rounded-r"
+										className="px-4 py-2 bg-secondary text-white rounded-r"
 									>
 										Next
 									</button>
@@ -282,13 +342,17 @@ const Home = () => {
 											</tr>
 										</thead>
 										<tbody className="text-gray-600 text-sm">
-											<tr className="border-b border-gray-200 hover:bg-gray-100">
-												<td className="py-3 px-6 text-left">001</td>
-												<td className="py-3 px-6 text-left">akhil</td>
-												<td className="py-3 px-6 text-left">10</td>
-												<td className="py-3 px-6 text-left">A+</td>
-												<td className="py-3 px-6 text-left">2024-09-09</td>
-											</tr>
+											{donations.map(item => {
+												return (
+													<tr key={item.id} className="border-b border-gray-200 hover:bg-gray-100">
+														<td className="py-3 px-6 text-left">{item.id}</td>
+														<td className="py-3 px-6 text-left">{item.name}</td>
+														<td className="py-3 px-6 text-left">{item.count}</td>
+														<td className="py-3 px-6 text-left">{item.donatedBloodGroup}</td>
+														<td className="py-3 px-6 text-left">{item.createdAt}</td>
+													</tr>
+												)
+											})}
 											{/* Add more rows as needed */}
 										</tbody>
 									</table>
@@ -297,7 +361,7 @@ const Home = () => {
 									<button
 										onClick={() => handleDonationsPageChange(currentDonationsPage - 1)}
 										disabled={currentDonationsPage === 1}
-										className="px-4 py-2 bg-blue-500 text-white rounded-l"
+										className="px-4 py-2 bg-secondary text-white rounded-l"
 									>
 										Previous
 									</button>
@@ -305,7 +369,7 @@ const Home = () => {
 										<button
 											key={page + 1}
 											onClick={() => handleDonationsPageChange(page + 1)}
-											className={`px-4 py-2 ${currentDonationsPage === page + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
+											className={`px-4 py-2 ${currentDonationsPage === page + 1 ? 'bg-secondary text-white' : 'bg-white text-secondary'
 												}`}
 										>
 											{page + 1}
@@ -314,7 +378,7 @@ const Home = () => {
 									<button
 										onClick={() => handleDonationsPageChange(currentDonationsPage + 1)}
 										disabled={currentDonationsPage === totalDonationPages}
-										className="px-4 py-2 bg-blue-500 text-white rounded-r"
+										className="px-4 py-2 bg-secondary text-white rounded-r"
 									>
 										Next
 									</button>
@@ -335,13 +399,17 @@ const Home = () => {
 											</tr>
 										</thead>
 										<tbody className="text-gray-600 text-sm">
-											<tr className="border-b border-gray-200 hover:bg-gray-100">
-												<td className="py-3 px-6 text-left">A+</td>
-												<td className="py-3 px-6 text-left">120</td>
-												<td className="py-3 px-6 text-left">
-													<span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Sufficient</span>
-												</td>
-											</tr>
+											{units.map(item => {
+												return (
+													<tr key={item.id} className="border-b border-gray-200 hover:bg-gray-100">
+														<td className="py-3 px-6 text-left">{item.bloodGroup}</td>
+														<td className="py-3 px-6 text-left">{item.count}</td>
+														<td className="py-3 px-6 text-left">
+															{item.count > 20 ? <span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Sufficient</span> : <span className="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Low</span>}
+														</td>
+													</tr>
+												)
+											})}
 											{/* Add more rows as needed */}
 										</tbody>
 									</table>
@@ -350,7 +418,7 @@ const Home = () => {
 									<button
 										onClick={() => handleUnitsPageChange(currentUnitsPage - 1)}
 										disabled={currentUnitsPage === 1}
-										className="px-4 py-2 bg-blue-500 text-white rounded-l"
+										className="px-4 py-2 bg-secondary text-white rounded-l"
 									>
 										Previous
 									</button>
@@ -358,7 +426,7 @@ const Home = () => {
 										<button
 											key={page + 1}
 											onClick={() => handleUnitsPageChange(page + 1)}
-											className={`px-4 py-2 ${currentUnitsPage === page + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'
+											className={`px-4 py-2 ${currentUnitsPage === page + 1 ? 'bg-secondary text-white' : 'bg-white text-secondary'
 												}`}
 										>
 											{page + 1}
@@ -367,7 +435,7 @@ const Home = () => {
 									<button
 										onClick={() => handleUnitsPageChange(currentUnitsPage + 1)}
 										disabled={currentUnitsPage === totalUnitPages}
-										className="px-4 py-2 bg-blue-500 text-white rounded-r"
+										className="px-4 py-2 bg-secondary text-white rounded-r"
 									>
 										Next
 									</button>
@@ -378,7 +446,7 @@ const Home = () => {
 					</div>
 				</div>
 				<p className="text-gray-600">This is a simple card centered on the screen using Tailwind CSS.</p>
-				{/* <button className="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+				{/* <button className="mt-6 bg-secondary text-white py-2 px-4 rounded hover:bg-blue-600">
           Click Me
         </button> */}
 			</div>
