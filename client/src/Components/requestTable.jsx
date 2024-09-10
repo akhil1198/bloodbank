@@ -4,7 +4,6 @@ import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
 
 const RequestTable = () => {
-    const [activeTab, setActiveTab] = useState('units')
     const [currentRequestsPage, setCurrentRequestsPage] = useState(1);
 
     const [requests, setRequests] = useState([])
@@ -57,7 +56,7 @@ const RequestTable = () => {
 
     return (
         <div>
-            <div className='h-[50vh] overflow-x-scroll'>
+            <div className='h-[50vh] overflow-x-hidden'>
                 <table className="min-w-full bg-white border border-gray-300">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal sticky top-0 z-10">

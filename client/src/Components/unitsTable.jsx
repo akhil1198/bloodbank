@@ -50,7 +50,7 @@ const UnitsTable = () => {
 
     return (
         <div>
-            <div className='h-[50vh] overflow-x-scroll'>
+            <div className='h-[50vh] overflow-x-hidden'>
                 {/* <h2 className="text-2xl font-semibold mb-4">Blood Requests</h2> */}
                 <table className="min-w-full bg-white border border-gray-300">
                     <thead>
