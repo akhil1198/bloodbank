@@ -39,7 +39,11 @@ Users.init({
 	},
 	age: {
 		type: DataTypes.INTEGER,
-	}}, 
+	}, 
+	password: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	}},
 	{
 		sequelize,
 		modelName: 'Users',

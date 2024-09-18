@@ -32,6 +32,10 @@ Users.init({
     },
     age: {
         type: sequelize_1.DataTypes.INTEGER,
+    },
+    password: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
     }
 }, {
     sequelize: db_1.default,

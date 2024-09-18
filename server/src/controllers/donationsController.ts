@@ -30,18 +30,31 @@ export const getAllDonations = async (req: Request, res: Response): Promise<void
 }
 
 // Get donations by their id
-export const getDonationsByID = async (req: Request, res: Response): Promise<void> => {
+export const getDonationsById = async (req: Request, res: Response): Promise<void> => {
 
     try {
-        const donations = await Donations.findByPk(req.body.id);
-        if (donations) {
-            res.json(donations)
-        } else {
-            res.status(400).send("Unit does not exist.")
-        }
+        const userid = req.query.userid
+
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const startInd = (page - 1) * limit
+        const endInd = page * limit
+
+        const donations = await Donations.findAll({ where: { userid: userid } });
+        const totalDonations = donations.length
+        const paginatedDonations = donations.slice(startInd, endInd)
+
+        res.json({
+            paginatedDonations,
+            page,
+            limit,
+            totalPages: Math.ceil(totalDonations / limit),
+            totalDonations
+        })
     } catch (err) {
         console.log("Error: ", err)
-        res.status(500).send("Error Retrieving Unit.")
+        res.status(500).send("Error Retrieving Donations.")
     }
 
 }

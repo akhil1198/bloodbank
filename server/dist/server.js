@@ -22,6 +22,7 @@ const donationRoutes_1 = __importDefault(require("./routes/donationRoutes"));
 const app = (0, express_1.default)();
 const port = 5000;
 app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 // Configure Sequelize connection
 const sequelize = new sequelize_1.Sequelize('bloodbank', 'postgres', 'Akhil@1198', {
     host: 'localhost',
@@ -43,7 +44,7 @@ app.use('/api', unitRoutes_1.default);
 app.use('/api', donationRoutes_1.default);
 app.use('/api', requestRoutes_1.default);
 app.get('/', (req, res) => {
-    res.send('Hello world!');
+    res.send('Welcome to Blood Bank API');
 });
 app.listen(port, () => {
     console.log("Server started at port", port);

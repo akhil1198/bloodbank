@@ -2,7 +2,7 @@
   "name": "root",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm --prefix client start\" \"npm --prefix server run dev\"",
+    "start": "concurrently \"npm --prefix client start\" \"npm --prefix server run build\" \"npm --prefix server start\"",
     "build": "concurrently \"npm --prefix client run build\" \"npm --prefix server run build\"",
     "install": "concurrently \"npm --prefix client install\" \"npm --prefix server install\""
   },

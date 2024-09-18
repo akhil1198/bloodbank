@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express, { Request, Response } from 'express'
 import { Sequelize } from 'sequelize'
 import cors from 'cors'
 import User from './models/user';
@@ -12,7 +12,7 @@ const app = express()
 const port = 5000
 
 app.use(cors())
-
+app.use(express.json());
 // Configure Sequelize connection
 const sequelize = new Sequelize('bloodbank', 'postgres', 'Akhil@1198', {
   host: 'localhost',
@@ -39,9 +39,9 @@ app.use('/api', requestRoutes)
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello world!');
+  res.send('Welcome to Blood Bank API');
 })
 
 app.listen(port, () => {
-    console.log("Server started at port", port)
+  console.log("Server started at port", port)
 })

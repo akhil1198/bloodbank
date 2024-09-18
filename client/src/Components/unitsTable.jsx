@@ -82,7 +82,7 @@ const UnitsTable = () => {
                     disabled={currentUnitsPage === 1}
                     className="px-2 py-2 w-10 h-10 rounded-full"
                 >
-                    <GrFormPrevious size='lg' />
+                    <GrFormPrevious length="lg" />
                 </button>
                 {[...Array(totalUnitPages).keys()].map(page => (
                     <button
@@ -99,7 +99,7 @@ const UnitsTable = () => {
                     disabled={currentUnitsPage === totalUnitPages}
                     className="px-2 py-2 w-10 h-10 rounded-full"
                 >
-                    <GrFormNext size='lg' />
+                    <GrFormNext length="lg" />
                 </button>
             </div>
         </div>

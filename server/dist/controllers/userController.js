@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserByID = exports.getAllUsers = void 0;
+exports.loginUser = exports.createUser = exports.getUserByID = exports.getAllUsers = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 // Get all users from the db
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -58,12 +59,27 @@ exports.getUserByID = getUserByID;
 // Creating new users
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, email, phone, bloodGroup, age } = req.body;
-        yield user_1.default.create({ name, email, phone, bloodGroup, age }).then(() => {
-            res.status(200).send("User Created!");
-        }).catch((err) => {
-            res.status(400).send("Unable to create user!");
+        const { name, email, phone, bloodGroup, age, password } = req.body;
+        console.log(req.body);
+        const userExists = yield user_1.default.findOne({
+            where: {
+                email: email
+            }
         });
+        console.log(email, "response -> ", userExists);
+        if (userExists) {
+            res.status(400).send("User already exists!");
+        }
+        else {
+            const salt = yield bcryptjs_1.default.genSalt(10);
+            const hashedPass = yield bcryptjs_1.default.hash(password, salt);
+            yield user_1.default.create({ name, email, phone, bloodGroup, age, password: hashedPass }).then(() => {
+                res.status(200).send("User Created!");
+            }).catch((err) => {
+                console.log("Unable to create user!", err);
+                res.status(400).send("Unable to create user!");
+            });
+        }
     }
     catch (error) {
         console.error('Error creating user:', error);
@@ -71,3 +87,45 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createUser = createUser;
+const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            res.status(400).json({
+                message: "Please provide all the required details."
+            });
+        }
+        const userExists = yield user_1.default.findOne({
+            where: {
+                email: email
+            }
+        });
+        console.log(email, "response -> ", userExists);
+        if (userExists) {
+            console.log("login user -> ", userExists.dataValues.password);
+            const validatePass = yield bcryptjs_1.default.compare(password, userExists.dataValues.password);
+            if (!validatePass) {
+                res.status(400).json({
+                    message: "Invalid Password"
+                });
+            }
+            else {
+                res.status(200).json({
+                    message: "User Logged In!",
+                    user: {
+                        data: userExists.dataValues
+                    }
+                });
+            }
+        }
+        else {
+            res.status(400).send("User does not exist!");
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+});
+exports.loginUser = loginUser;

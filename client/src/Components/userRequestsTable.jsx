@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
 
-const RequestTable = () => {
+const UserRequestTable = (user) => {
     const [currentRequestsPage, setCurrentRequestsPage] = useState(1);
 
     const [requests, setRequests] = useState([])
@@ -20,10 +20,11 @@ const RequestTable = () => {
     const fetchRequests = async (page, limit) => {
         try {
             // Send current page and limit as query params
-            const response = await axios.get('http://localhost:5000/api/requests', {
+            const response = await axios.get('http://localhost:5000/api/requests/id', {
                 params: {
                     page, // Use 'page' to send the correct current page
-                    limit
+                    limit,
+                    userid: user.id
                 }
             });
             return response.data; // Return the data object
@@ -56,8 +57,8 @@ const RequestTable = () => {
 
     return (
         <div>
-            <div className='h-[50vh] overflow-x-hidden'>
-                <table className="min-w-full bg-white border border-gray-300">
+            <div className='min-h-[33.8vh]  overflow-x-hidden'>
+                <table className="min-w-full border border-gray-300">
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal sticky top-0 z-10">
                             <th className="py-3 px-6 text-left">Request ID</th>
@@ -117,4 +118,4 @@ const RequestTable = () => {
     )
 }
 
-export default RequestTable
+export default UserRequestTable
